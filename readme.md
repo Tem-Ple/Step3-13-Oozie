@@ -5,3 +5,4 @@
 5. Oozie的配置说明。
 6. Oozie实现mapreduce/hive等任务调度实战案例。
 
+> 使用Hue可以图形化创建workflow

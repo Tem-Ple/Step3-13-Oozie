@@ -1,0 +1,47 @@
+<workflow-app name="My Workflow" xmlns="uri:oozie:workflow:0.5">
+    <start to="shell-2880"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="shell-2880">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>/user/cloudera/step1_rm_output.sh</exec>
+            <file>/user/cloudera/step1_rm_output.sh#step1_rm_output.sh</file>
+              <capture-output/>
+        </shell>
+        <ok to="mapreduce-366f"/>
+        <error to="Kill"/>
+    </action>
+    <action name="mapreduce-366f">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>/test2.txt</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>/out</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="hive2-622d"/>
+        <error to="Kill"/>
+    </action>
+    <action name="hive2-622d" cred="hive2">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <jdbc-url>jdbc:hive2://quickstart.cloudera:10000/default</jdbc-url>
+            <script>/user/cloudera/step3_create_hive_create.sql</script>
+            <file>/user/cloudera/step3_create_hive_create.sql#step3_create_hive_create.sql</file>
+        </hive2>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
