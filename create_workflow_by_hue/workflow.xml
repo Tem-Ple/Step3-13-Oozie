@@ -29,16 +29,25 @@
                 </property>
             </configuration>
         </map-reduce>
-        <ok to="hive2-622d"/>
+        <ok to="hive2-593e"/>
         <error to="Kill"/>
     </action>
-    <action name="hive2-622d" cred="hive2">
+    <action name="hive2-593e" cred="hive2">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <jdbc-url>jdbc:hive2://quickstart.cloudera:10000/default</jdbc-url>
-            <script>/user/cloudera/step3_create_hive_create.sql</script>
-            <file>/user/cloudera/step3_create_hive_create.sql#step3_create_hive_create.sql</file>
+            <script>/user/cloudera/step3_create_external_table.sql</script>
+        </hive2>
+        <ok to="hive2-f630"/>
+        <error to="Kill"/>
+    </action>
+    <action name="hive2-f630" cred="hive2">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <jdbc-url>jdbc:hive2://quickstart.cloudera:10000/default</jdbc-url>
+            <script>/user/cloudera/step4_CTAS.sql</script>
         </hive2>
         <ok to="End"/>
         <error to="Kill"/>
